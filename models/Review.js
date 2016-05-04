@@ -2,14 +2,17 @@ module.exports = function (mongoose) {
     "use strict";
     var Schema = mongoose.Schema;
     var ReviewSchema = new Schema({
-        reviewName: {
+        review: {
             type: String
         },
-        description:{
+        comments:{
             type: String
         },
         status: {
             type: String
+        },
+        ratings:{
+            type:Number
         },
         image:{
             type: String

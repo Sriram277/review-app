@@ -12,9 +12,10 @@ router.post('/user/login', user.login);
 
 /* category */
 router.get('/category/list', config.isAuthorized, category.listAllCategories);
+router.post('/category/create', category.saveCategory);
 
 /* product */
-router.get('/product/list', config.isAuthorized, product.getProducts);
+router.get('/product/list', product.getProducts);
 router.post('/product/create', product.saveProduct);
 
 /* review */

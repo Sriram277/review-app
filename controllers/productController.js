@@ -7,7 +7,7 @@ var Product = mongoose.model('Product');
 module.exports = {
 
     getProducts: function (req, res) {
-        Product.findOne({}).populate('reviews').exec(function (err, products) {
+        Product.find({}).populate('reviews').exec(function (err, products) {
             if (err) {
                 res.status(500).send({type: false, data: "Error occured: " + err});
             } else {
@@ -24,28 +24,6 @@ module.exports = {
             }
             if (!err || product) {
                 res.send(product);
-            }
-        });
-    },
-
-    login: function (req, res) {
-        User.findOne({
-            username: req.body.username,
-            password: req.body.password
-        }, function (err, user) {
-            console.log(err, user);
-            if (err) {
-                res.json({type: false, data: "Error occured: " + err});
-            } else {
-                var token = jwt.sign(user, "12scxzc321932", {
-                    expiresInMinutes: 1440 // expires in 24 hours
-                });
-                user.accessToken = token;
-                if (user) {
-                    res.status(200).send({user:user});
-                } else {
-                    res.json({type: false, data: "Incorrect email/password"});
-                }
             }
         });
     }
