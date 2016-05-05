@@ -18,12 +18,19 @@ var http = require('http');
 
 var app = express();
 
-var port = normalizePort(process.env.PORT || '3000');
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+
 
 var server = http.createServer(app);
 var config = require('./config/config.js');
+var mongodb_connection_string = config.MONGO_URL;
 
-mongoose.connect(config.MONGO_URL);
+if(process.env.OPENSHIFT_MONGODB_DB_URL){
+    mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + "review-app";
+}
+
+mongoose.connect(mongodb_connection_string);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -98,29 +105,13 @@ app.use(function(err, req, res, next) {
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(server_port, server_ip_address, function () {
+    console.log( "Listening on " + server_ip_address + ", server_port " + server_port )
+});
+
 server.on('error', onError);
-server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
 
-function normalizePort(val) {
-    var port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
-    return false;
-}
 
 /**
  * Event listener for HTTP server "error" event.
@@ -147,18 +138,6 @@ function onError(error) {
             throw error;
     }
 }
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    console.log('Listening on ' + bind);
-}
-
-
 
 
 module.exports = app;
