@@ -15,6 +15,15 @@ module.exports = {
             }
         });
     },
+    listCategoryWithReviews: function(req,res){
+        Category.findOne(req.params.catId).populate('reviews').exec(function (err, category) {
+            if (err) {
+                res.status(500).send({type: false, data: "Error occured: " + err});
+            } else {
+                res.json(category);
+            }
+        });
+    },
     saveCategory: function(req,res){
         var category = new Category(req.body);
         category.save(function (err, category) {

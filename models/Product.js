@@ -26,6 +26,7 @@ module.exports = function (mongoose) {
         categoryId:{type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
         reviews:[{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
     }, {
+        versionKey: false,
         strict: false
     });
 

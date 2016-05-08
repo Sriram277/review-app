@@ -11,11 +11,13 @@ router.post('/user/register', user.register);
 router.post('/user/login', user.login);
 
 /* category */
-router.get('/category/list', config.isAuthorized, category.listAllCategories);
+router.get('/category/all/list', category.listAllCategories);
+router.get('/category/:catId/list',category.listCategoryWithReviews);
 router.post('/category/create', category.saveCategory);
 
 /* product */
-router.get('/product/list', product.getProducts);
+router.get('/product/all/list', product.listAllProducts);
+router.get('/product/:prodId/list', product.getProductWithReviews);
 router.post('/product/create', product.saveProduct);
 
 /* review */

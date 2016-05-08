@@ -23,9 +23,10 @@ module.exports = function (mongoose) {
             type: Date,
             "default": Date.now
         },
-        Products:[{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
-        Reviews:[{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
+        products:[{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
+        reviews:[{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
     }, {
+        versionKey: false,
         strict: false
     });
 
