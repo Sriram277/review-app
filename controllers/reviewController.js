@@ -1,9 +1,8 @@
 var _ = require('underscore');
-var jwt = require("jsonwebtoken");
 var mongoose = require('mongoose');
-var config = require('../config/config.js');
 var Review = mongoose.model('Review');
 var Product = mongoose.model('Product');
+var Category = mongoose.model('Category');
 
 module.exports = {
 
@@ -14,11 +13,16 @@ module.exports = {
                 res.send(500, err);
             }
             if (review) {
-                Product.findById(review.productId, function(err, product){
+                Product.findById(review.productId, function (err, product) {
                     product.reviews.push(review);
-                    product.save(function(err, product){
-                        res.json({status: 'success', message: "You have commented on this product"});
-                    }); //end product.save
+                    product.save(function (err, product) {
+                        Category.findById(review.categoryId, function (err, category) {
+                            category.reviews.push(review);
+                            category.save(function (err, cat) {
+                                res.json({status: 'success', message: "You have commented on this product"});
+                            });
+                        });
+                    });
                 });
             }
         });

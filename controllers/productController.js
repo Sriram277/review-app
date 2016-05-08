@@ -6,8 +6,9 @@ var Product = mongoose.model('Product');
 
 module.exports = {
 
-    getProducts: function (req, res) {
-        Product.find({}).populate('reviews').exec(function (err, products) {
+    getProductWithReviews: function (req, res) {
+        console.log("dsfdsfds")
+        Product.findOne(req.params.prodId).populate('reviews').exec(function (err, products) {
             if (err) {
                 res.status(500).send({type: false, data: "Error occured: " + err});
             } else {
@@ -15,6 +16,17 @@ module.exports = {
             }
         });
 
+    },
+    listAllProducts: function (req, res) {
+        console.log("kew")
+        Product.find({}, function (err, products) {
+            console.log(err,products);
+            if (err) {
+                res.json({type: false, data: "Error occured: " + err});
+            } else {
+                res.json(products);
+            }
+        });
     },
     saveProduct: function(req,res){
         var product = new Product(req.body);

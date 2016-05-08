@@ -16,6 +16,7 @@ module.exports = function(mongoose) {
         },
         session: String
     }, {
+        versionKey: false,
         strict: false
     });
 

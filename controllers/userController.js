@@ -38,7 +38,7 @@ module.exports = {
                             res.send(500, err);
                         }
                         if (!err) {
-                            res.send(user);
+                            res.status(200).send({message:"Successfully Registered"});
                         }
                     });
                 }
@@ -48,23 +48,40 @@ module.exports = {
     },
 
     login: function (req, res) {
-        User.findOne({
-            username: req.body.username,
-            password: req.body.password
-        }, function (err, user) {
-            console.log(err, user);
+
+        if (!req.body.username) {
+            return res.status(400).send({error: "Username is required"});
+        }
+        if (!req.body.password) {
+            return res.status(400).send({error: "Password is required"});
+        }
+        User.findOne({username: req.body.username}, function (err, user) {
             if (err) {
                 res.json({type: false, data: "Error occured: " + err});
             } else {
-                var token = jwt.sign(user, "12scxzc321932", {
-                    expiresInMinutes: 1440 // expires in 24 hours
+                console.log(user);
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (err) res.json({type: false, data: "Error occured: " + err});
+                    console.log(req.body.password, isMatch); // -> Password123: true
+                    if (isMatch) {
+                        var token = jwt.sign(user, "12scxzc321932", {
+                            expiresIn: 1440 // expires in 24 hours
+                        });
+                        console.log(token);
+                        var record = {
+                            tokenId: token,
+                            user: user
+                        };
+                        record.user.password = undefined;
+                        console.log(record);
+                        if (user) {
+                            res.status(200).send(record);
+                        } else {
+                            res.json({type: false, data: "Incorrect email/password"});
+                        }
+                    }
                 });
-                user.accessToken = token;
-                if (user) {
-                    res.status(200).send({user:user});
-                } else {
-                    res.json({type: false, data: "Incorrect email/password"});
-                }
+
             }
         });
     }

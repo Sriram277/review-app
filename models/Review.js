@@ -29,6 +29,7 @@ module.exports = function (mongoose) {
         productId:{type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
         categoryId:{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}
     }, {
+        versionKey: false,
         strict: false
     });
 
